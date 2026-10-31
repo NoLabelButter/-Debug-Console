@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>DebugConsole</AssemblyName>
+    <RootNamespace>DebugConsole</RootNamespace>
+    <LangVersion>9.0</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>x64</PlatformTarget>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+    <NoWarn>$(NoWarn);CS0169;CS0649;CS0414</NoWarn>
+    <GameManagedDir>$(GameDir)\Probably Stolen_Data\Managed</GameManagedDir>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="recovery-snapshots\**\*.cs" />
+    <Reference Include="Assembly-CSharp"><HintPath>$(GameManagedDir)\Assembly-CSharp.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Assembly-CSharp-firstpass"><HintPath>$(GameManagedDir)\Assembly-CSharp-firstpass.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="0Harmony"><HintPath>$(GameManagedDir)\0Harmony.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.CoreModule"><HintPath>$(GameManagedDir)\UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.UIModule"><HintPath>$(GameManagedDir)\UnityEngine.UIModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.UI"><HintPath>$(GameManagedDir)\UnityEngine.UI.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.InputLegacyModule"><HintPath>$(GameManagedDir)\UnityEngine.InputLegacyModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Unity.TextMeshPro"><HintPath>$(GameManagedDir)\Unity.TextMeshPro.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.SceneManagementModule"><HintPath>$(GameManagedDir)\UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Newtonsoft.Json"><HintPath>$(GameManagedDir)\Newtonsoft.Json.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+  <Target Name="ValidateGameDirectory" BeforeTargets="ResolveReferences">
+    <Error Condition="'$(GameDir)' == ''" Text="Set GameDir to your Probably Stolen installation directory, for example with -p:GameDir=&quot;C:\Games\Probably Stolen&quot;." />
+    <Error Condition="!Exists('$(GameManagedDir)\Assembly-CSharp.dll')" Text="GameDir does not contain Probably Stolen_Data\Managed\Assembly-CSharp.dll." />
+  </Target>
+  <Target Name="PackageOfficialMod" AfterTargets="Build">
+    <MakeDir Directories="$(MSBuildProjectDirectory)\发版\DebugConsole\preview" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(MSBuildProjectDirectory)\发版\DebugConsole" />
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\manifest.xml" DestinationFolder="$(MSBuildProjectDirectory)\发版\DebugConsole" />
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\安装说明.md" DestinationFolder="$(MSBuildProjectDirectory)\发版\DebugConsole" Condition="Exists('$(MSBuildProjectDirectory)\安装说明.md')" />
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\preview\preview.png" DestinationFolder="$(MSBuildProjectDirectory)\发版\DebugConsole\preview" Condition="Exists('$(MSBuildProjectDirectory)\preview\preview.png')" />
+  </Target>
+</Project>

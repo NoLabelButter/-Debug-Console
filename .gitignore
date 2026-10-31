@@ -1,0 +1,13 @@
+.vs/
+bin/
+obj/
+发版/
+recovery-snapshots/
+_l10n/
+*.dll
+*.pdb
+*.cache
+*.user
+*.suo
+*.log
+.DS_Store

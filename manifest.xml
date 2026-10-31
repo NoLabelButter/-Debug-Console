@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Manifest>
+  <ID>debug_console</ID>
+  <Name>Debug Console</Name>
+  <Author>ButterLab</Author>
+  <ModVersion>1.0.0</ModVersion>
+  <Description>游戏内调试控制台、游戏数据查看与调试命令。</Description>
+  <GameVersions />
+  <Prerequisites />
+  <Assemblies>
+    <Assembly>DebugConsole.dll</Assembly>
+  </Assemblies>
+  <Capabilities>
+    <Capability>files</Capability>
+    <Capability>reflection-external</Capability>
+  </Capabilities>
+</Manifest>

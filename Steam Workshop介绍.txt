@@ -1,0 +1,55 @@
+[h1]Debug Console — In-Game Toolkit[/h1]
+A practical in-game debug toolkit for Probably Stolen. Check your current shop state, adjust gameplay values, manage stock, and use quick actions without digging through menus.
+
+[h2]Features[/h2]
+[list]
+[*] [b]Three interface modes:[/b] Simple mode for clickable cards, Hybrid mode for cards and a command line, and Developer mode for the command line.
+[*] [b]Adjustable interface size:[/b] Use A- / A+ in the title bar to scale the whole console from 75% to 200% in 5% steps. Your choice is saved.
+[*] [b]Item catalog and stock tools:[/b] Browse, search, filter, and favorite items; choose how many to create and whether they go to the counter or storage.
+[*] [b]Shop controls:[/b] Check your status, money, rent, reputation, and shop power; adjust values, advance days, and inspect or trigger events.
+[*] [b]Batch item editing:[/b] Use the game's labeler to edit item tags, including across a selected group. You can also sync an item's real quality to its labels.
+[*] [b]Convenience options:[/b] Switch between Chinese and English, choose a light or dark theme, and save the current game on demand.
+[/list]
+
+[h2]Getting started[/h2]
+[list]
+[*] Press [b]Ctrl+Shift+I[/b] to open or close the console.
+[*] Choose a mode from the title bar, then browse the category cards or use the command line in Hybrid and Developer modes.
+[*] Open the Item Console from the title bar to browse and create stock.
+[*] Click [b]A-[/b] or [b]A+[/b] to make the entire interface smaller or larger.
+[/list]
+
+[h2]Please note[/h2]
+This is a debug and cheat tool. Some actions directly change the current game state, and clearing stock removes items. Back up your save before making changes you may want to undo.
+
+Author: ButterLab
+Version: 1.0.0
+
+[hr][/hr]
+
+[h1]调试控制台 Debug Console[/h1]
+为 Probably Stolen 提供的游戏内调试工具。查看当前经营状态、调整常用玩法参数、管理库存，还可以通过操作卡片或命令行快速执行调试操作。
+
+[h2]功能介绍[/h2]
+[list]
+[*] [b]三种界面模式：[/b]简单模式使用操作卡片；混合模式同时提供卡片和命令行；开发者模式使用命令行。
+[*] [b]自定义界面大小：[/b]点击标题栏的 A- / A+，按 5% 调整整个控制台，范围为 75%–200%；设置会自动保存。
+[*] [b]物品目录与库存管理：[/b]浏览、搜索、筛选和收藏物品，选择生成数量，以及放到柜台或仓库。
+[*] [b]经营状态工具：[/b]查看金钱、租金、声望和店铺电力；调整数值、快进天数，并查看或触发游戏事件。
+[*] [b]批量编辑物品：[/b]打开游戏自带的打标器修改物品标签，也可以一次编辑选中的一批物品；还可以把真实品质同步为标签显示的品质。
+[*] [b]使用偏好：[/b]切换中英文和亮色/深色主题，也可以随时手动保存当前进度。
+[/list]
+
+[h2]快速开始[/h2]
+[list]
+[*] 按 [b]Ctrl+Shift+I[/b] 打开或关闭控制台。
+[*] 在标题栏切换界面模式，然后点分类卡片；混合模式和开发者模式也可以使用命令行。
+[*] 点击标题栏的“物品控制台”浏览并生成物品。
+[*] 点击 [b]A-[/b] 或 [b]A+[/b] 缩小或放大整个界面。
+[/list]
+
+[h2]使用提醒[/h2]
+这是调试和作弊工具。部分操作会直接修改当前游戏状态，清空库存会移除物品；如果希望保留回退空间，请先备份存档。
+
+作者：ButterLab
+版本：1.0.0
