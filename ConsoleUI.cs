@@ -176,6 +176,7 @@ namespace DebugConsole
         private static bool _itemView;                  // 现在停在物品控制台这一屏？
         private static UiButton _btnItems;              // 顶栏那个「物品控制台 / 返回命令」
         private static GameObject _itemRoot;
+        private static GameObject _clearAllDialog;
         private static GameObject _itemGrid;
         private static float _itemGridW, _itemGridH;
         private static Image _itemSelIcon;
@@ -1648,6 +1649,7 @@ namespace DebugConsole
         /// <summary>面板重建时把物品控制台留下的引用全清掉。</summary>
         private static void KillItemConsole()
         {
+            CloseClearAllDialog();
             _btnItems = null;
             _itemRoot = null;
             _itemGrid = null;
@@ -1703,13 +1705,15 @@ namespace DebugConsole
             RefreshItemSide();
         }
 
-        // ── 顶栏：分类 / 筛选 / 搜索 / 收藏 ───────────────────────────
+        // ── 顶栏：分类 / 筛选 / 搜索 / 收藏 / 库存操作 ────────────────
 
         private static void BuildItemToolbar(float x, float y, float w, float rightW)
         {
             const float favW = 104f;
+            const float clearW = 140f;
             float searchX = x + 360f;
-            float searchW = Mathf.Max(120f, w - 360f - favW - 8f);
+            float favX = x + w - favW - clearW - 8f;
+            float searchW = Mathf.Max(120f, favX - searchX - 8f);
 
             // 分类：全部分类 + 游戏里的 29 个物品目录
             List<string> keys = new List<string> { "" };
@@ -1759,8 +1763,12 @@ namespace DebugConsole
 
             _itemFavBtn = Ui.MakeButton(_itemRoot.transform, "Fav", "★ 收藏", 13f,
                 Palette.BtnIdle, Palette.Body, ToggleFavFilter, Ui.AlignCenter);
-            if (_itemFavBtn != null) _itemFavBtn.Place(x + w - favW, y, favW, ItemDropH);
+            if (_itemFavBtn != null) _itemFavBtn.Place(favX, y, favW, ItemDropH);
             PaintItemFav();
+
+            UiButton clear = Ui.MakeButton(_itemRoot.transform, "ClearAll", "清空库存…", 12f,
+                Palette.BtnDanger, Palette.Title, ClearAllGo, Ui.AlignCenter);
+            if (clear != null) clear.Place(x + w - clearW, y, clearW, ItemDropH);
         }
 
         private static void ItemSearchGo(string s)
@@ -2185,13 +2193,6 @@ namespace DebugConsole
                 Palette.BtnRun, Palette.Title, SpawnGo, Ui.AlignCenter);
             if (gen != null) gen.Place(px, cy, iw, 36f);
 
-            // 清空是「整个店」的操作，摆在右栏最底，离生成远一点免得误点。
-            // （刷新客户物品搬到「物品」分类里当单独一张卡了）
-            float by = h - 12f - 30f;
-            UiButton clr = Ui.MakeButton(box.transform, "ClearAll", "清空所有物品", 13f,
-                Palette.BtnDanger, Palette.Title, ClearAllGo, Ui.AlignCenter);
-            if (clr != null) clr.Place(px, by, iw, 30f);
-
             PaintItemLoc();
         }
 
@@ -2237,6 +2238,60 @@ namespace DebugConsole
 
         private static void ClearAllGo()
         {
+            if (_clearAllDialog != null || _itemRoot == null) return;
+
+            RectTransform rootRect = Ui.Rect(_itemRoot);
+            if (rootRect == null) return;
+            float rootW = rootRect.rect.width;
+            float rootH = rootRect.rect.height;
+            if (rootW <= 0f || rootH <= 0f) return;
+
+            _clearAllDialog = Ui.New("ClearAllDialog", _itemRoot.transform);
+            if (_clearAllDialog == null) return;
+            Ui.Place(_clearAllDialog, 0f, 0f, rootW, rootH);
+
+            Image dim = Ui.MakeImage(_clearAllDialog.transform, "Dim", new Color(0f, 0f, 0f, 0.68f), true);
+            if (dim != null) Ui.Place(dim.gameObject, 0f, 0f, rootW, rootH);
+
+            float dialogW = Mathf.Min(460f, rootW - 24f);
+            const float dialogH = 190f;
+            float dx = (rootW - dialogW) * 0.5f;
+            float dy = (rootH - dialogH) * 0.5f;
+            Image card = Ui.MakeSliced(_clearAllDialog.transform, "Card", Ui.Card(), Palette.CardBg, true);
+            if (card != null) Ui.Place(card.gameObject, dx, dy, dialogW, dialogH);
+
+            TextMeshProUGUI title = Ui.MakeText(_clearAllDialog.transform, "Title",
+                "确认清空所有物品？", 18f, Palette.Title, Ui.AlignCenter, false);
+            if (title != null) Ui.Place(title.gameObject, dx + 20f, dy + 20f, dialogW - 40f, 28f);
+
+            TextMeshProUGUI warning = Ui.MakeText(_clearAllDialog.transform, "Warning",
+                "即将移除柜台、后仓和前场的全部物品。本操作无法撤销，请先备份存档。", 14f, Palette.Err, Ui.AlignCenter, true);
+            if (warning != null) Ui.Place(warning.gameObject, dx + 24f, dy + 60f, dialogW - 48f, 56f);
+
+            float buttonW = Mathf.Min(142f, (dialogW - 44f) * 0.5f);
+            const float buttonGap = 12f;
+            float buttonX = dx + (dialogW - buttonW * 2f - buttonGap) * 0.5f;
+            float buttonY = dy + dialogH - 48f;
+            UiButton cancel = Ui.MakeButton(_clearAllDialog.transform, "Cancel", "取消", 14f,
+                Palette.BtnIdle, Palette.Body, CloseClearAllDialog, Ui.AlignCenter);
+            if (cancel != null) cancel.Place(buttonX, buttonY, buttonW, 34f);
+
+            UiButton confirm = Ui.MakeButton(_clearAllDialog.transform, "Confirm", "确认清空", 14f,
+                Palette.BtnDanger, Palette.Title, ConfirmClearAll, Ui.AlignCenter);
+            if (confirm != null) confirm.Place(buttonX + buttonW + buttonGap, buttonY, buttonW, 34f);
+
+            try { _clearAllDialog.transform.SetAsLastSibling(); } catch { }
+        }
+
+        private static void CloseClearAllDialog()
+        {
+            if (_clearAllDialog != null) UnityEngine.Object.Destroy(_clearAllDialog);
+            _clearAllDialog = null;
+        }
+
+        private static void ConfirmClearAll()
+        {
+            CloseClearAllDialog();
             int n;
             string err = GameApi.ClearAllItems(out n);
             if (err != null) { Out.Warn("清空物品：" + err + "（已销毁 " + n + " 件）"); return; }
